@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>أذكار الصباح والمساء</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* ===================== الوضع الليلي (افتراضي) ===================== */
+  :root,
+  [data-theme="dark"] {
+    --night: #0C1220;
+    --night-deep: #080B14;
+    --panel: #171F30;
+    --panel-raised: #202B42;
+    --panel-hi: #26314C;
+    --gold: #D29F54;
+    --gold-soft: #F6DE7C;
+    --gold-line: rgba(210,159,84,0.28);
+    --glass-bg: linear-gradient(155deg, rgba(38,49,76,0.55), rgba(23,31,48,0.35));
+    --glass-border: rgba(210,159,84,0.22);
+    --sticky-fade: linear-gradient(180deg, rgba(12,18,32,0.92) 0%, rgba(12,18,32,0.75) 60%, rgba(12,18,32,0) 100%);
+    --parchment: #F7F1E3;
+    --parchment-dim: #9CA3B5;
+    --parchment-faint: #6B7284;
+    --danger: #C1604A;
+    --success: #6FA46B;
+    --success-glow: rgba(111,164,107,0.22);
+    --radius-lg: 22px;
+    --radius-md: 15px;
+    --radius-sm: 11px;
+    --bg-noise-op: 0.02;
+  }
+
+  /* ===================== الوضع النهاري ===================== */
+  [data-theme="light"] {
+    --night: #FBF6EA;
+    --night-deep: #F3EAD4;
+    --panel: #FFFFFF;
+    --panel-raised: #FDF7E9;
+    --panel-hi: #F6ECD2;
+    --gold: #B9812E;
+    --gold-soft: #8C6420;
+    --gold-line: rgba(185,129,46,0.32);
+    --glass-bg: linear-gradient(155deg, rgba(255,255,255,0.55), rgba(253,247,233,0.35));
+    --glass-border: rgba(185,129,46,0.25);
+    --sticky-fade: linear-gradient(180deg, rgba(251,246,234,0.92) 0%, rgba(251,246,234,0.75) 60%, rgba(251,246,234,0) 100%);
+    --parchment: #2B2213;
+    --parchment-dim: #6B5B3A;
+    --parchment-faint: #8C7B58;
+    --danger: #B14A34;
+    --success: #4C8348;
+    --success-glow: rgba(76,131,72,0.18);
+    --radius-lg: 22px;
+    --radius-md: 15px;
+    --radius-sm: 11px;
+    --bg-noise-op: 0.045;
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: var(--night);
+    color: var(--parchment);
+    font-family: 'Tajawal', sans-serif;
+    transition: background 0.35s ease, color 0.35s ease;
+  }
+
+  body {
+    background-image:
+      radial-gradient(circle at 50% -10%, rgba(210,159,84,0.14), transparent 55%),
+      radial-gradient(circle at 100% 105%, rgba(38,49,76,0.35), transparent 50%),
+      repeating-linear-gradient(45deg, rgba(210,159,84,var(--bg-noise-op)) 0px, rgba(210,159,84,var(--bg-noise-op)) 1px, transparent 1px, transparent 22px),
+      repeating-linear-gradient(-45deg, rgba(210,159,84,var(--bg-noise-op)) 0px, rgba(210,159,84,var(--bg-noise-op)) 1px, transparent 1px, transparent 22px);
+    padding: 18px 16px 34px;
+  }
+
+  /* ===================== HEADER ===================== */
+  .header {
+    text-align: center;
+    padding: 6px 8px 4px;
+    position: relative;
+  }
+
+  .theme-toggle {
+    position: absolute;
+    top: 12px;
+    left: 16px;
+    width: 60px;
+    height: 32px;
+    border-radius: 20px;
+    background: var(--panel-raised);
+    border: 1px solid var(--gold-line);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 3px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.18);
+    transition: background 0.35s ease, border-color 0.35s ease;
+    direction: ltr;
+  }
+
+  .theme-toggle .track-icon {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.55;
+    transition: opacity 0.35s ease;
+  }
+
+  .theme-toggle .track-icon.sun {
+    left: 8px;
+    color: var(--gold);
+  }
+
+  .theme-toggle .track-icon.moon {
+    right: 8px;
+    color: var(--parchment-faint);
+  }
+
+  [data-theme="light"] .theme-toggle .track-icon.sun { opacity: 1; }
+  [data-theme="dark"] .theme-toggle .track-icon.moon { opacity: 1; }
+
+  .theme-toggle .knob {
+    position: relative;
+    z-index: 2;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(155deg, var(--gold-soft), var(--gold));
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateX(0);
+    transition: transform 0.35s cubic-bezier(.5,-0.3,.5,1.3);
+  }
+
+  [data-theme="light"] .theme-toggle .knob {
+    transform: translateX(28px);
+  }
+
+  .theme-toggle .knob svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .theme-toggle .knob-icon-moon path {
+    fill: var(--night-deep);
+  }
+
+  .theme-toggle .knob-icon-sun circle,
+  .theme-toggle .knob-icon-sun path {
+    stroke: var(--night-deep);
+    stroke-width: 1.6;
+  }
+
+  .theme-toggle .knob-icon-sun {
+    display: none;
+  }
+
+  [data-theme="light"] .theme-toggle .knob-icon-sun {
+    display: block;
+  }
+
+  [data-theme="light"] .theme-toggle .knob-icon-moon {
+    display: none;
+  }
+
+  .header-icon {
+    font-size: 26px;
+    margin-bottom: 4px;
+  }
+
+  .header h1 {
+    font-family: 'Noto Kufi Arabic', sans-serif;
+    font-weight: 800;
+    font-size: 21px;
+    color: var(--gold-soft);
+    margin: 0 0 4px;
+    letter-spacing: 0.2px;
+  }
+
+  .header p {
+    font-size: 12px;
+    color: var(--parchment-dim);
+    margin: 0;
+    line-height: 1.6;
+    white-space: nowrap;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .header p::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ===================== PROGRESS (STICKY) ===================== */
+  .progress-sticky-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    margin: 0 -16px;
+    padding: 10px 16px 12px;
+    background: transparent;
+  }
+
+  .progress-card {
+    position: relative;
+    background: var(--panel);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.22), 0 2px 6px rgba(0,0,0,0.14);
+    transition: background 0.35s ease, border-color 0.35s ease;
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12.5px;
+    color: var(--parchment-dim);
+    margin-bottom: 8px;
+    font-family: 'Noto Kufi Arabic', sans-serif;
+    font-weight: 600;
+  }
+
+  .progress-percent {
+    color: var(--gold-soft);
+    font-weight: 800;
+    font-size: 14px;
+  }
+
+  .progress-bar-bg {
+    width: 100%;
+    height: 10px;
+    border-radius: 8px;
+    background: var(--night-deep);
+    overflow: hidden;
+    border: 1px solid var(--gold-line);
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 8px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-soft));
+    width: 0%;
+    transition: width 0.35s ease;
+  }
+
+  /* ===================== COMPLETE BANNER ===================== */
+  .complete-banner {
+    display: none;
+    margin-top: 14px;
+    background: linear-gradient(155deg, var(--gold-soft), var(--gold));
+    border-radius: var(--radius-md);
+    padding: 16px;
+    text-align: center;
+    color: var(--night-deep);
+    font-weight: 800;
+    font-family: 'Noto Kufi Arabic', sans-serif;
+    font-size: 15px;
+    box-shadow: 0 6px 20px var(--success-glow);
+  }
+
+  .complete-banner .sub {
+    font-weight: 500;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 12.5px;
+    margin-top: 5px;
+    opacity: 0.85;
+  }
+
+  /* ===================== LIST ===================== */
+  .list {
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .zekr-card {
+    background: var(--panel);
+    border: 1px solid var(--gold-line);
+    border-radius: var(--radius-lg);
+    padding: 16px 16px 13px;
+    position: relative;
+    transition: background 0.3s ease, border-color 0.3s ease, transform 0.15s ease;
+  }
+
+  .zekr-card.done {
+    background: var(--panel-raised);
+    border-color: var(--success);
+  }
+
+  .zekr-card.pressed {
+    transform: scale(0.985);
+  }
+
+  .zekr-index {
+    position: absolute;
+    top: -10px;
+    right: 14px;
+    background: var(--gold);
+    color: var(--night-deep);
+    font-family: 'Noto Kufi Arabic', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  }
+
+  .zekr-card.done .zekr-index {
+    background: var(--success);
+    color: var(--night-deep);
+  }
+
+  .zekr-text {
+    font-size: 16.5px;
+    line-height: 2.1;
+    color: var(--parchment);
+    margin-top: 6px;
+    margin-bottom: 11px;
+    white-space: pre-line;
+  }
+
+  .zekr-card.done .zekr-text {
+    color: var(--parchment-dim);
+  }
+
+  .zekr-benefit {
+    font-size: 12.5px;
+    color: var(--parchment-dim);
+    line-height: 1.75;
+    background: var(--night-deep);
+    border-right: 3px solid var(--gold);
+    padding: 7px 11px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 13px;
+  }
+
+  .zekr-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .count-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--panel-raised);
+    border: 1px solid var(--gold-line);
+    color: var(--parchment);
+    font-family: 'Noto Kufi Arabic', sans-serif;
+    font-size: 14.5px;
+    font-weight: 700;
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .count-btn:active {
+    background: var(--panel-hi);
+  }
+
+  .count-btn .remaining-num {
+    color: var(--gold-soft);
+    font-size: 16px;
+    min-width: 20px;
+    text-align: center;
+  }
+
+  .zekr-card.done .count-btn {
+    background: linear-gradient(180deg, var(--gold-soft), var(--gold));
+    border-color: transparent;
+    color: var(--night-deep);
+    cursor: default;
+  }
+
+  .zekr-card.done .count-btn .remaining-num {
+    color: var(--night-deep);
+  }
+
+  .check-icon {
+    display: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--success);
+    color: var(--night-deep);
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .zekr-card.done .check-icon {
+    display: flex;
+  }
+
+  /* ===================== RESET ===================== */
+  .reset-row {
+    display: flex;
+    justify-content: center;
+    margin-top: 22px;
+  }
+
+  .reset-btn {
+    background: transparent;
+    border: 1px solid var(--gold-line);
+    color: var(--parchment-faint);
+    font-family: 'Tajawal', sans-serif;
+    font-size: 12px;
+    padding: 9px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+
+  .reset-btn:active {
+    background: var(--panel-raised);
+  }
+</style>
+</head>
+<body data-theme="dark">
+
+<div class="header">
+  <button class="theme-toggle" id="themeToggle" aria-label="تبديل الوضع الليلي والنهاري">
+  <svg class="track-icon sun" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"/>
+    <path d="M12 2.5V4.5M12 19.5V21.5M4.5 12H2.5M21.5 12H19.5M5.6 5.6L7 7M17 17L18.4 18.4M18.4 5.6L17 7M7 17L5.6 18.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  </svg>
+  <svg class="track-icon moon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 14.2C18.7 14.9 17.2 15.3 15.6 15.3C10.6 15.3 6.6 11.3 6.6 6.3C6.6 4.7 7 3.2 7.7 1.9C4 3.3 1.4 6.9 1.4 11.1C1.4 16.6 5.9 21.1 11.4 21.1C15.6 21.1 19.2 18.5 20.6 14.8C20.4 14.9 20.2 15.1 20 14.2Z" fill="currentColor"/>
+  </svg>
+  <span class="knob">
+    <svg class="knob-icon knob-icon-sun" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="4.5" stroke="currentColor"/>
+      <path d="M12 1.5V4M12 20V22.5M4.4 4.4L6.2 6.2M17.8 17.8L19.6 19.6M1.5 12H4M20 12H22.5M4.4 19.6L6.2 17.8M17.8 6.2L19.6 4.4" stroke="currentColor" stroke-linecap="round"/>
+    </svg>
+    <svg class="knob-icon knob-icon-moon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20.5 14.8C19 15.6 17.3 16 15.5 16C9.98999 16 5.5 11.51 5.5 6C5.5 4.2 5.9 2.5 6.7 1C2.7 2.7 -0.100006 6.7 -0.100006 11.3C-0.100006 17.5 4.9 22.5 11.1 22.5C15.7 22.5 19.7 19.7 21.4 15.7C21.2 15.9 20.9 16 20.5 14.8Z" fill="currentColor" transform="translate(1.6, -0.5) scale(0.95)"/>
+    </svg>
+  </span>
+</button>
+  <div class="header-icon" id="headerIcon">🌅</div>
+  <h1 id="headerTitle">أذكار الصباح</h1>
+  <p id="headerDate"></p>
+</div>
+
+<div class="progress-sticky-wrap">
+  <div class="progress-card">
+    <div class="progress-info">
+      <span id="progressLabel">التقدم</span>
+      <span class="progress-percent" id="progressPercent">0%</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+  </div>
+</div>
+
+<div class="complete-banner" id="completeBanner">
+  ✅ تم إكمال جميع الأذكار
+  <div class="sub" id="completeSub">تقبل الله منك، جعله الله في ميزان حسناتك</div>
+</div>
+
+<div class="list" id="zekrList"></div>
+
+<div class="reset-row">
+  <button class="reset-btn" id="resetBtn">إعادة ضبط أذكار اليوم من البداية</button>
+</div>
+
+<script>
+(function(){
+  const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+  if (tg) {
+    tg.ready();
+    tg.expand();
+  }
+
+  // ===========================
+  // تدرج شريط التقدم مع السكرول
+  // ===========================
+  const progressCard = document.querySelector('.progress-card');
+  const MERGE_DISTANCE = 140; // px من بداية السكرول لحد الاندماج الكامل
+
+  function updateProgressMerge(){
+    if (!progressCard) return;
+    const y = window.scrollY || document.documentElement.scrollTop || 0;
+    const merge = Math.max(0, Math.min(1, y / MERGE_DISTANCE));
+    progressCard.style.setProperty('--scroll-merge', merge.toFixed(3));
+  }
+
+  window.addEventListener('scroll', updateProgressMerge, { passive: true });
+  updateProgressMerge();
+
+  // ===========================
+  // إدارة الثيم (نهاري / ليلي)
+  // ===========================
+  const THEME_KEY = 'azkar_theme_preference';
+  const themeToggleBtn = document.getElementById('themeToggle');
+
+  function applyTheme(theme){
+    document.body.setAttribute('data-theme', theme);
+    try { localStorage.setItem(THEME_KEY, theme); } catch(e){}
+    if (tg) {
+      try {
+        tg.setHeaderColor(theme === 'dark' ? '#0C1220' : '#FBF6EA');
+        tg.setBackgroundColor(theme === 'dark' ? '#0C1220' : '#FBF6EA');
+      } catch(e){}
+    }
+  }
+
+  function getInitialTheme(){
+    let saved = null;
+    try { saved = localStorage.getItem(THEME_KEY); } catch(e){}
+    if (saved === 'dark' || saved === 'light') return saved;
+    if (tg && tg.colorScheme === 'light') return 'light';
+    return 'dark';
+  }
+
+  applyTheme(getInitialTheme());
+
+  themeToggleBtn.addEventListener('click', function(){
+    const current = document.body.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    if (tg && tg.HapticFeedback) {
+      try { tg.HapticFeedback.impactOccurred('light'); } catch(e){}
+    }
+  });
+
+  // ===========================
+  // تحديد النوع من رابط الصفحة
+  // ===========================
+  const params = new URLSearchParams(window.location.search);
+  const azkarType = (params.get('type') === 'evening') ? 'evening' : 'morning';
+  const isMorning = azkarType === 'morning';
+
+  document.getElementById('headerIcon').textContent = isMorning ? '🌅' : '🌙';
+  document.getElementById('headerTitle').textContent = isMorning ? 'أذكار الصباح' : 'أذكار المساء';
+
+  const now = new Date();
+  const dateKey = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+  const storageKey = 'azkar_' + azkarType + '_' + dateKey;
+
+  const weekdays = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  const months = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+  const hijriMonths = ['محرم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوال','ذو القعدة','ذو الحجة'];
+
+  function toArabicDigits(str){
+    const arabicDigits = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+    return String(str).replace(/[0-9]/g, d => arabicDigits[d]);
+  }
+
+  function getHijriDate(date){
+    // نحاول أولاً الاعتماد على تقويم Umm al-Qura المدعوم في المتصفحات الحديثة
+    try {
+      const parts = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', { day: 'numeric', month: 'numeric', year: 'numeric' }).formatToParts(date);
+      const map = {};
+      parts.forEach(p => { map[p.type] = p.value; });
+      if (map.day && map.month && map.year) {
+        return { day: parseInt(map.day, 10), month: parseInt(map.month, 10), year: parseInt(map.year, 10) };
+      }
+    } catch(e){}
+
+    // خوارزمية تحويل حسابية احتياطية (تقريب كويتي/طبولي) لو التقويم الهجري غير مدعوم
+    const jd = Math.floor((date.getTime() / 86400000) + 2440587.5 + 0.5);
+    let l = jd - 1948440 + 10632;
+    const n = Math.floor((l - 1) / 10631);
+    l = l - 10631 * n + 354;
+    const j = (Math.floor((10985 - l) / 5316)) * (Math.floor((50 * l) / 17719)) + (Math.floor(l / 5670)) * (Math.floor((43 * l) / 15238));
+    l = l - (Math.floor((30 - j) / 15)) * (Math.floor((17719 * j) / 50)) - (Math.floor(j / 16)) * (Math.floor((15238 * j) / 43)) + 29;
+    const hMonth = Math.floor((24 * l) / 709);
+    const hDay = l - Math.floor((709 * hMonth) / 24);
+    const hYear = 30 * n + j - 30;
+    return { day: hDay, month: hMonth, year: hYear };
+  }
+
+  const hijri = getHijriDate(now);
+  const hijriStr = toArabicDigits(hijri.day) + ' ' + hijriMonths[hijri.month - 1] + ' ' + toArabicDigits(hijri.year) + 'هـ';
+  const gregStr = weekdays[now.getDay()] + ' ' + toArabicDigits(now.getDate()) + ' ' + months[now.getMonth()] + ' ' + toArabicDigits(now.getFullYear()) + 'م';
+  document.getElementById('headerDate').textContent = hijriStr + ' — ' + gregStr;
+
+  // ===========================
+  // مصفوفة أذكار الصباح (حصن المسلم) - بالتشكيل الكامل والتكرارات الشرعية الدقيقة
+  // ===========================
+  const morningAzkar = [
+    {
+      text: "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ:\nاللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ",
+      benefit: "من قالها حين يصبح أُجير من الجن حتى يُمسي (آية الكرسي — لها حصن عظيم من كل مكروه)",
+      count: 1
+    },
+    {
+      text: "قُلْ هُوَ اللَّهُ أَحَدٌ ﴿١﴾ اللَّهُ الصَّمَدُ ﴿٢﴾ لَمْ يَلِدْ وَلَمْ يُولَدْ ﴿٣﴾ وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ ﴿٤﴾",
+      benefit: "سورة الإخلاص",
+      count: 3
+    },
+    {
+      text: "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ﴿١﴾ مِنْ شَرِّ مَا خَلَقَ ﴿٢﴾ وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ ﴿٣﴾ وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ﴿٤﴾ وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ ﴿٥﴾",
+      benefit: "سورة الفلق",
+      count: 3
+    },
+    {
+      text: "قُلْ أَعُوذُ بِرَبِّ النَّاسِ ﴿١﴾ مَلِكِ النَّاسِ ﴿٢﴾ إِلَٰهِ النَّاسِ ﴿٣﴾ مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ ﴿٤﴾ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ ﴿٥﴾ مِنَ الْجِنَّةِ وَالنَّاسِ ﴿٦﴾",
+      benefit: "سورة الناس",
+      count: 3
+    },
+    {
+      text: "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَٰذَا الْيَوْمِ وَخَيْرَ مَا بَعْدَهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَٰذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ",
+      benefit: "دعاء أصبحنا وأصبح الملك لله",
+      count: 1
+    },
+    {
+      text: "اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ",
+      benefit: "دعاء اللهم بك أصبحنا",
+      count: 1
+    },
+    {
+      text: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَىٰ عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
+      benefit: "سيد الاستغفار — من قالها موقناً بها حين يصبح فمات من يومه دخل الجنة",
+      count: 1
+    },
+    {
+      text: "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلَائِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَٰهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ، وَأَنَّ مُحَمَّدًا عَبْدُكَ وَرَسُولُكَ",
+      benefit: "من قالها أعتقه الله من النار",
+      count: 4
+    },
+    {
+      text: "اللَّهُمَّ مَا أَصْبَحَ بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ",
+      benefit: "من قالها فقد أدى شكر يومه",
+      count: 1
+    },
+    {
+      text: "اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَٰهَ إِلَّا أَنْتَ.\nاللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لَا إِلَٰهَ إِلَّا أَنْتَ",
+      benefit: "دعاء العافية",
+      count: 3
+    },
+    {
+      text: "حَسْبِيَ اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ",
+      benefit: "من قالها كفاه الله ما أهمه",
+      count: 7
+    },
+    {
+      text: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+      benefit: "من قالها لم يضره شيء حتى يُمسي",
+      count: 3
+    },
+    {
+      text: "رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ ﷺ نَبِيًّا",
+      benefit: "من قالها كان حقًا على الله أن يرضيه يوم القيامة",
+      count: 3
+    },
+    {
+      text: "يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَىٰ نَفْسِي طَرْفَةَ عَيْنٍ",
+      benefit: "دعاء الاستغاثة بالحي القيوم",
+      count: 1
+    },
+    {
+      text: "أَصْبَحْنَا عَلَىٰ فِطْرَةِ الْإِسْلَامِ، وَعَلَىٰ كَلِمَةِ الْإِخْلَاصِ، وَعَلَىٰ دِينِ نَبِيِّنَا مُحَمَّدٍ ﷺ، وَعَلَىٰ مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِينَ",
+      benefit: "دعاء الفطرة",
+      count: 1
+    },
+    {
+      text: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
+      benefit: "من قالها مائة مرة حُطّت خطاياه وإن كانت مثل زبد البحر",
+      count: 100
+    },
+    {
+      text: "لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ",
+      benefit: "من قالها عشر مرات كانت له عدل عشر رقاب وكانت له حرزاً من الشيطان يومه",
+      count: 10
+    },
+    {
+      text: "سُبْحَانَ اللَّهِ، وَالْحَمْدُ لِلَّهِ، وَلَا إِلَٰهَ إِلَّا اللَّهُ، وَاللَّهُ أَكْبَرُ",
+      benefit: "أحب الكلام إلى الله",
+      count: 1
+    },
+    {
+      text: "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ",
+      benefit: "الاستغفار — من لزمه جعل الله له من كل ضيق مخرجاً",
+      count: 100
+    },
+    {
+      text: "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَىٰ نَبِيِّنَا مُحَمَّدٍ",
+      benefit: "الصلاة على النبي ﷺ",
+      count: 10
+    }
+  ];
+
+  // ===========================
+  // مصفوفة أذكار المساء (حصن المسلم) - بالتشكيل الكامل والتكرارات الشرعية الدقيقة
+  // نفس أذكار الصباح مع تبديل "أَصْبَحْنَا" بـ "أَمْسَيْنَا" وما يقابلها كما ورد في السنة
+  // ===========================
+  const eveningAzkar = [
+    {
+      text: "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ:\nاللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ",
+      benefit: "من قالها حين يمسي أُجير من الجن حتى يصبح (آية الكرسي — لها حصن عظيم من كل مكروه)",
+      count: 1
+    },
+    {
+      text: "قُلْ هُوَ اللَّهُ أَحَدٌ ﴿١﴾ اللَّهُ الصَّمَدُ ﴿٢﴾ لَمْ يَلِدْ وَلَمْ يُولَدْ ﴿٣﴾ وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ ﴿٤﴾",
+      benefit: "سورة الإخلاص",
+      count: 3
+    },
+    {
+      text: "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ﴿١﴾ مِنْ شَرِّ مَا خَلَقَ ﴿٢﴾ وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ ﴿٣﴾ وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ﴿٤﴾ وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ ﴿٥﴾",
+      benefit: "سورة الفلق",
+      count: 3
+    },
+    {
+      text: "قُلْ أَعُوذُ بِرَبِّ النَّاسِ ﴿١﴾ مَلِكِ النَّاسِ ﴿٢﴾ إِلَٰهِ النَّاسِ ﴿٣﴾ مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ ﴿٤﴾ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ ﴿٥﴾ مِنَ الْجِنَّةِ وَالنَّاسِ ﴿٦﴾",
+      benefit: "سورة الناس",
+      count: 3
+    },
+    {
+      text: "أَمْسَيْنَا وَأَمْسَىٰ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَٰذِهِ اللَّيْلَةِ وَخَيْرَ مَا بَعْدَهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَٰذِهِ اللَّيْلَةِ وَشَرِّ مَا بَعْدَهَا، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ",
+      benefit: "دعاء أمسينا وأمسى الملك لله",
+      count: 1
+    },
+    {
+      text: "اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ",
+      benefit: "دعاء اللهم بك أمسينا",
+      count: 1
+    },
+    {
+      text: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَىٰ عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
+      benefit: "سيد الاستغفار — من قالها موقناً بها حين يمسي فمات من ليلته دخل الجنة",
+      count: 1
+    },
+    {
+      text: "اللَّهُمَّ إِنِّي أَمْسَيْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلَائِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَٰهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ، وَأَنَّ مُحَمَّدًا عَبْدُكَ وَرَسُولُكَ",
+      benefit: "من قالها أعتقه الله من النار",
+      count: 4
+    },
+    {
+      text: "اللَّهُمَّ مَا أَمْسَىٰ بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ",
+      benefit: "من قالها فقد أدى شكر ليلته",
+      count: 1
+    },
+    {
+      text: "اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَٰهَ إِلَّا أَنْتَ.\nاللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لَا إِلَٰهَ إِلَّا أَنْتَ",
+      benefit: "دعاء العافية",
+      count: 3
+    },
+    {
+      text: "حَسْبِيَ اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ",
+      benefit: "من قالها كفاه الله ما أهمه",
+      count: 7
+    },
+    {
+      text: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+      benefit: "من قالها لم يضره شيء حتى يصبح",
+      count: 3
+    },
+    {
+      text: "رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ ﷺ نَبِيًّا",
+      benefit: "من قالها كان حقًا على الله أن يرضيه يوم القيامة",
+      count: 3
+    },
+    {
+      text: "يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَىٰ نَفْسِي طَرْفَةَ عَيْنٍ",
+      benefit: "دعاء الاستغاثة بالحي القيوم",
+      count: 1
+    },
+    {
+      text: "أَمْسَيْنَا عَلَىٰ فِطْرَةِ الْإِسْلَامِ، وَعَلَىٰ كَلِمَةِ الْإِخْلَاصِ، وَعَلَىٰ دِينِ نَبِيِّنَا مُحَمَّدٍ ﷺ، وَعَلَىٰ مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِينَ",
+      benefit: "دعاء الفطرة",
+      count: 1
+    },
+    {
+      text: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
+      benefit: "من قالها مائة مرة حُطّت خطاياه وإن كانت مثل زبد البحر",
+      count: 100
+    },
+    {
+      text: "لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ",
+      benefit: "من قالها عشر مرات كانت له عدل عشر رقاب وكانت له حرزاً من الشيطان ليلته",
+      count: 10
+    },
+    {
+      text: "سُبْحَانَ اللَّهِ، وَالْحَمْدُ لِلَّهِ، وَلَا إِلَٰهَ إِلَّا اللَّهُ، وَاللَّهُ أَكْبَرُ",
+      benefit: "أحب الكلام إلى الله",
+      count: 1
+    },
+    {
+      text: "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ",
+      benefit: "الاستغفار — من لزمه جعل الله له من كل ضيق مخرجاً",
+      count: 100
+    },
+    {
+      text: "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَىٰ نَبِيِّنَا مُحَمَّدٍ",
+      benefit: "الصلاة على النبي ﷺ",
+      count: 10
+    }
+  ];
+
+  const azkarList = isMorning ? morningAzkar : eveningAzkar;
+  const totalCount = azkarList.reduce((sum, z) => sum + z.count, 0);
+
+  // ===========================
+  // الحالة (State) - remaining لكل ذكر
+  // ===========================
+  let state = null; // { remaining: [..], done: [..] }
+
+  function defaultState(){
+    return {
+      remaining: azkarList.map(z => z.count),
+      done: azkarList.map(() => false)
+    };
+  }
+
+  function computeCompletedCount(st){
+    let completed = 0;
+    azkarList.forEach((z, i) => { completed += (z.count - st.remaining[i]); });
+    return completed;
+  }
+
+  function updateProgressUI(){
+    const completed = computeCompletedCount(state);
+    const percent = totalCount > 0 ? Math.round((completed / totalCount) * 100) : 0;
+    document.getElementById('progressFill').style.width = percent + '%';
+    document.getElementById('progressPercent').textContent = percent + '%';
+    document.getElementById('progressLabel').textContent = 'التقدم — ' + completed + ' / ' + totalCount;
+
+    const banner = document.getElementById('completeBanner');
+    if (percent >= 100) {
+      banner.style.display = 'block';
+      document.getElementById('completeSub').textContent = isMorning
+        ? 'تقبل الله منك أذكار الصباح، جعله الله في ميزان حسناتك'
+        : 'تقبل الله منك أذكار المساء، جعله الله في ميزان حسناتك';
+    } else {
+      banner.style.display = 'none';
+    }
+  }
+
+  function renderList(){
+    const list = document.getElementById('zekrList');
+    list.innerHTML = '';
+    azkarList.forEach((z, i) => {
+      const card = document.createElement('div');
+      card.className = 'zekr-card' + (state.done[i] ? ' done' : '');
+      card.dataset.index = i;
+
+      const badge = document.createElement('div');
+      badge.className = 'zekr-index';
+      badge.textContent = (i + 1) + ' / ' + azkarList.length;
+      card.appendChild(badge);
+
+      const textEl = document.createElement('div');
+      textEl.className = 'zekr-text';
+      textEl.textContent = z.text;
+      card.appendChild(textEl);
+
+      const benefitEl = document.createElement('div');
+      benefitEl.className = 'zekr-benefit';
+      benefitEl.textContent = '💡 ' + z.benefit;
+      card.appendChild(benefitEl);
+
+      const footer = document.createElement('div');
+      footer.className = 'zekr-footer';
+
+      const btn = document.createElement('button');
+      btn.className = 'count-btn';
+      updateBtnContent(btn, z, i);
+      btn.addEventListener('click', () => onTapZekr(i));
+      footer.appendChild(btn);
+
+      const check = document.createElement('div');
+      check.className = 'check-icon';
+      check.textContent = '✓';
+      footer.appendChild(check);
+
+      card.appendChild(footer);
+      list.appendChild(card);
+    });
+  }
+
+  function updateBtnContent(btn, z, i){
+    if (state.done[i]) {
+      btn.innerHTML = '✅ تم — ' + z.count + ' مرة بحمد الله';
+    } else {
+      btn.innerHTML = 'اضغط للعد &nbsp;•&nbsp; باقي <span class="remaining-num">' + state.remaining[i] + '</span>';
+    }
+  }
+
+  function onTapZekr(i){
+    if (state.done[i]) return;
+
+    state.remaining[i] -= 1;
+    if (state.remaining[i] <= 0) {
+      state.remaining[i] = 0;
+      state.done[i] = true;
+    }
+
+    if (tg && tg.HapticFeedback) {
+      try { tg.HapticFeedback.impactOccurred('light'); } catch(e){}
+    }
+
+    const card = document.querySelector('.zekr-card[data-index="' + i + '"]');
+    if (card) {
+      const btn = card.querySelector('.count-btn');
+      updateBtnContent(btn, azkarList[i], i);
+      if (state.done[i]) {
+        card.classList.add('done');
+        if (tg && tg.HapticFeedback) {
+          try { tg.HapticFeedback.notificationOccurred('success'); } catch(e){}
+        }
+      } else {
+        card.classList.add('pressed');
+        setTimeout(() => card.classList.remove('pressed'), 120);
+      }
+    }
+
+    updateProgressUI();
+    saveState();
+  }
+
+  // ===========================
+  // الحفظ والتحميل عبر Telegram CloudStorage
+  // مع نسخة احتياطية محلية (localStorage) لو الكلاود مش متاح
+  // ===========================
+  function saveState(){
+    const payload = JSON.stringify(state);
+    if (tg && tg.CloudStorage) {
+      tg.CloudStorage.setItem(storageKey, payload, function(err){
+        if (err) {
+          try { localStorage.setItem(storageKey, payload); } catch(e){}
+        }
+      });
+    } else {
+      try { localStorage.setItem(storageKey, payload); } catch(e){}
+    }
+  }
+
+  function loadState(callback){
+    if (tg && tg.CloudStorage) {
+      tg.CloudStorage.getItem(storageKey, function(err, value){
+        if (!err && value) {
+          try {
+            const parsed = JSON.parse(value);
+            if (parsed && Array.isArray(parsed.remaining) && parsed.remaining.length === azkarList.length) {
+              callback(parsed);
+              return;
+            }
+          } catch(e){}
+        }
+        callback(defaultState());
+      });
+    } else {
+      let stored = null;
+      try { stored = localStorage.getItem(storageKey); } catch(e){}
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (parsed && Array.isArray(parsed.remaining) && parsed.remaining.length === azkarList.length) {
+            callback(parsed);
+            return;
+          }
+        } catch(e){}
+      }
+      callback(defaultState());
+    }
+  }
+
+  document.getElementById('resetBtn').addEventListener('click', function(){
+    state = defaultState();
+    renderList();
+    updateProgressUI();
+    saveState();
+    if (tg && tg.HapticFeedback) {
+      try { tg.HapticFeedback.impactOccurred('medium'); } catch(e){}
+    }
+  });
+
+  // ===========================
+  // بدء التشغيل
+  // ===========================
+  loadState(function(loadedState){
+    state = loadedState;
+    renderList();
+    updateProgressUI();
+  });
+
+})();
+</script>
+</body>
+</html>
