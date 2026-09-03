@@ -224,12 +224,14 @@
 
   .progress-card {
     position: relative;
-    background: var(--panel);
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
     border: 1px solid var(--glass-border);
     border-radius: var(--radius-md);
     padding: 12px 14px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.22), 0 2px 6px rgba(0,0,0,0.14);
-    transition: background 0.35s ease, border-color 0.35s ease;
+    transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
   }
 
   .progress-info {
@@ -558,7 +560,13 @@
   // تحديد النوع من رابط الصفحة
   // ===========================
   const params = new URLSearchParams(window.location.search);
-  const azkarType = (params.get('type') === 'evening') ? 'evening' : 'morning';
+  let azkarType = params.get('type');
+
+  if (!azkarType && tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
+    azkarType = tg.initDataUnsafe.start_param;
+  }
+
+  if (azkarType !== 'evening') azkarType = 'morning';
   const isMorning = azkarType === 'morning';
 
   document.getElementById('headerIcon').textContent = isMorning ? '🌅' : '🌙';
